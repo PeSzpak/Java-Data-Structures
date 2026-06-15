@@ -370,4 +370,4 @@ O Tim Sort é tão eficiente porque aproveita sequências que já estão ordenad
 
 ## Por que os algoritmos O(n²) rodam numa amostra?
 
-Bubble, Selection e Insertion Sort em 100.000 elementos podem levar **vários minutos**. O sistema automaticamente os testa com 10.000 elementos e avisa na tabela. Você ainda pode escolher qualquer um deles pra gerar o arquivo ordenado completo — aí ele roda na base inteira.
+Bubble, Selection e Insertion Sort em 100.000 elementos podem levar **vários minutos**. O sistema automaticamente os testa com 10.000 elementos e avisa na tabela. Você ainda pode escolher qualquer um deles pra gerar o arquivo ordenado completo aí ele roda na base inteira.
