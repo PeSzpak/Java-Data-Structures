@@ -4,22 +4,37 @@
 **Prof.:** MSc. Edgar Cabral  
 **Linguagem:** Java  
 
+Implementação e benchmark de 11 algoritmos de ordenação sobre 100.000 números, medindo tempo, comparações e trocas de cada um.
+
 ---
 
 ## Como rodar
+
+Requer JDK 11 ou superior.
 
 ```bash
 # 1. Compilar
 javac GenerateData.java SortResult.java SortAlgorithms.java Main.java
 
 # 2. Gerar os dados (cria dados.csv com 100.000 valores)
-java GenerateData
+java -Duser.language=en -Duser.country=US GenerateData
 
 # 3. Executar o sistema
-java Main dados.csv
+java -Duser.language=en -Duser.country=US Main dados.csv
 ```
 
-O programa vai rodar todos os 11 algoritmos, mostrar o tempo de cada um e perguntar qual você quer usar pra gerar o arquivo ordenado.
+O programa roda os 11 algoritmos, mostra o tempo de cada um e pergunta qual usar para gerar o arquivo ordenado (`ordenado_<algoritmo>.csv`).
+
+> Por que o `-Duser.language=en`? O `GenerateData` grava os números com `String.format("%.2f")`, que segue o locale do sistema. Em pt-BR sai `727563,68`, e o `Main` separa os valores por vírgula, então cada número vira dois e a base passa a ter 200.000 inteiros. Com o locale em inglês o separador decimal é ponto e o CSV fica correto.
+
+```mermaid
+flowchart LR
+    G[GenerateData] -->|dados.csv| M[Main]
+    M --> S[SortAlgorithms<br/>11 algoritmos]
+    S -->|SortResult| T[Tabela de métricas<br/>+ ranking]
+    T --> U{Usuário escolhe 1-11}
+    U --> O[ordenado_algoritmo.csv]
+```
 
 ---
 
@@ -47,17 +62,33 @@ Cada algoritmo retorna um objeto `SortResult` com quatro informações:
 
 A tabela final ainda mostra um **ranking dos algoritmos mais rápidos** rodando na base completa de 100k elementos.
 
-Exemplo de saída:
+Saída real (JDK 25, Apple Silicon; os tempos mudam a cada execução e máquina):
 
 ```
 =========================================================================================================
-Nº   Algoritmo          Tempo(ms)         Comparações               Trocas         Passos totais  Nota
+Nº   Algoritmo          Tempo(ms)          Comparações               Trocas          Passos totais  Nota
 ---------------------------------------------------------------------------------------------------------
-1    Bubble Sort                8      24,990,000          12,345,678         37,335,678  [amostra 10.000]
-4    Merge Sort                55       1,668,928           2,621,408          4,290,336  [100.000 elem.]
-5    Quick Sort                28       1,700,241             100,000          1,800,241  [100.000 elem.]
-11   Tim Sort                  22         889,452             100,000            989,452  [100.000 elem.]
-...
+1    Bubble Sort              204           49,973,055           25,108,117             75,081,172  [amostra 10,000 elem.]
+2    Selection Sort           146           49,995,000                9,991             50,004,991  [amostra 10,000 elem.]
+3    Insertion Sort            47           25,118,101           25,108,117             50,226,218  [amostra 10,000 elem.]
+4    Merge Sort                29            1,536,281            3,337,856              4,874,137  [100,000 elem.]
+5    Quick Sort                61            1,925,693            1,071,883              2,997,576  [100,000 elem.]
+6    Heap Sort                 64            3,019,507            1,574,627              4,594,134  [100,000 elem.]
+7    Counting Sort             29            1,199,986              200,000              1,399,986  [100,000 elem.]
+8    Radix Sort                60              200,000            2,000,000              2,200,000  [100,000 elem.]
+9    Bucket Sort              103            1,030,687              200,000              1,230,687  [100,000 elem.]
+10   Shell Sort                47            4,403,526            2,954,082              7,357,608  [100,000 elem.]
+11   Tim Sort                  41           14,497,365            1,968,395             16,465,760  [100,000 elem.]
+=========================================================================================================
+
+  Ranking por tempo (algoritmos rodados na base completa):
+    1º Merge Sort — 29 ms
+    2º Counting Sort — 29 ms
+    3º Tim Sort — 41 ms
+    ...
+Ordenando 100,000 elementos com Tim Sort...
+Arquivo gerado: ordenado_tim_sort.csv
+Tempo: 15 ms | Comparações: 14,497,365 | Trocas: 1,968,395 | Passos: 16,465,760
 ```
 
 ---
